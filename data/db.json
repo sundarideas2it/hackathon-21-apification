@@ -1,0 +1,21 @@
+{
+  "ids": {
+    "Session": 22
+  },
+  "models": {
+    "Session": {
+      "o76rsz2sz8a26zmu7dbqwi": "{\"id\":\"o76rsz2sz8a26zmu7dbqwi\",\"browser\":\"ws://127.0.0.1:39047/devtools/browser/94bb948e-0800-41f2-a94c-6028ed82e1cd\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "94zzarpwsgipriqev46elk": "{\"id\":\"94zzarpwsgipriqev46elk\",\"browser\":\"ws://127.0.0.1:45773/devtools/browser/126d3787-5c50-4234-8298-f9121e8d4ed0\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "4l8jn5qtj6mdkcglwxe71m": "{\"id\":\"4l8jn5qtj6mdkcglwxe71m\",\"browser\":\"ws://127.0.0.1:45059/devtools/browser/d35658d0-ec48-49b0-8f73-ccf6702f0cb8\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "685drd20vvddg41465782s": "{\"id\":\"685drd20vvddg41465782s\",\"browser\":\"ws://127.0.0.1:40433/devtools/browser/2c168ed1-95bc-44cc-876f-418e9d923732\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "7747442xn71x3byjz4bqa": "{\"id\":\"7747442xn71x3byjz4bqa\",\"browser\":\"ws://127.0.0.1:33033/devtools/browser/d5362fdc-f40e-48cd-a59e-271c7baf792f\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "0wuoxeh2svephvqgz565na": "{\"id\":\"0wuoxeh2svephvqgz565na\",\"browser\":\"ws://127.0.0.1:36269/devtools/browser/64dcb495-0590-4be2-a5a3-093cde0c244b\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "xudmx9o9wd8w33wh48i9p": "{\"id\":\"xudmx9o9wd8w33wh48i9p\",\"browser\":\"ws://127.0.0.1:41161/devtools/browser/6fa3bc3c-55e2-4166-acdc-20bee1cd9ed1\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "2xsb4mp6llixk35urjaaoi": "{\"id\":\"2xsb4mp6llixk35urjaaoi\",\"browser\":\"ws://127.0.0.1:34243/devtools/browser/06451a6f-f12e-4009-9c07-148b0ca6bd2a\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "hsnzd5duqxjac3eq6fdae": "{\"id\":\"hsnzd5duqxjac3eq6fdae\",\"browser\":\"ws://127.0.0.1:40431/devtools/browser/cbaeb26a-cf1c-4de5-aa6b-642588c18cf5\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "2d70eushzvo9zqyerfttpr": "{\"id\":\"2d70eushzvo9zqyerfttpr\",\"browser\":\"ws://127.0.0.1:35257/devtools/browser/7b37fd59-b57c-4383-a3ff-9809402f4356\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "dr0qdk8douh5go2di47ucf": "{\"id\":\"dr0qdk8douh5go2di47ucf\",\"browser\":\"ws://127.0.0.1:43713/devtools/browser/ae3ab49c-066e-46d1-9c41-4b5399e591d0\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}",
+      "5fhm4yv7vih1uen93lxy7v": "{\"id\":\"5fhm4yv7vih1uen93lxy7v\",\"browser\":\"ws://127.0.0.1:45429/devtools/browser/299d7475-f299-40df-8c1f-d8a97d79d214\",\"webhook_url\":\"https://webhook.site/a875da57-20a2-4adc-bc21-295a3d197510\"}"
+    }
+  }
+}

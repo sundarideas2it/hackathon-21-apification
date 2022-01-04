@@ -1,0 +1,12 @@
+{
+  "applications": {
+    "1": "openmrs",
+    "2": "ideas2it"
+  },
+  "openmrs": {
+    "base_url": "https://demo.openmrs.org/openmrs/login.htm",
+    "home_url": "https://demo.openmrs.org/openmrs/referenceapplication/home.page",
+    "patient_url": "https://demo.openmrs.org/openmrs/coreapps/findpatient/findPatient.page?app=coreapps.findPatient",
+    "logout_btn": "a[href='/openmrs/appui/header/logout.action?successUrl=openmrs']"
+  }
+}
