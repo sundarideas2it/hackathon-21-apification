@@ -18,6 +18,18 @@ export interface Webhook {
     webhook_url: string,
     patient_records: object
   ): Promise<object>;
+
+  logError(
+    appname: string,
+    webhook_url: string,
+    err: object
+  ): Promise<object>;
+
+  info(
+    appname: string,
+    webhook_url: string,
+    info: object
+  ): Promise<object>;
 }
 
 export class WebhookProvider implements Provider<Webhook> {
@@ -58,7 +70,35 @@ export class WebhookService {
       const webPatient = await this.webhookservice.findPatient(
         params.appname,
         params.webhook_url,
-        params.patient_dtls,
+        params.patient_details,
+      );
+
+      return {};
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async logError(params: any): Promise<object> {
+    try {
+      const webPatient = await this.webhookservice.logError(
+        params.appname,
+        params.webhook_url,
+        params.err,
+      );
+
+      return {};
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async info(params: any): Promise<object> {
+    try {
+      const webPatient = await this.webhookservice.info(
+        params.appname,
+        params.webhook_url,
+        params.info,
       );
 
       return {};

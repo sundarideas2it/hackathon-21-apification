@@ -52,6 +52,15 @@ export class OpenmrsController {
 		await page.goto(config.openmrs.base_url, {waitUntil: 'load'});
 		if (await page.$('#username') !== null) {
 			browser.disconnect();
+			const errInfo = {
+				appname: 'openmrs',
+				webhook_url: browserObj.webhook_url,
+				err: {
+					message: 'Invalid session',
+					'status': 400
+				}
+			};
+			await this.webhookService.logError(errInfo);
 			return {message: 'Invalid session', 'status': 400};
 		}
 		await page.waitForTimeout(1000);
@@ -59,8 +68,20 @@ export class OpenmrsController {
 		await page.click("#coreapps-activeVisitsHomepageLink-coreapps-activeVisitsHomepageLink-extension");
 		await page.waitForSelector('#patient-search');
 
-		if (await page.$('#patient-search') === null)
+		if (await page.$('#patient-search') === null) {
+			browser.disconnect();
+			const errInfo = {
+				appname: 'openmrs',
+				webhook_url: browserObj.webhook_url,
+				err: {
+					message: 'Search field not found',
+					'status': 404
+				}
+			};
+			await this.webhookService.logError(errInfo);
 			return {message: 'Search field not found', 'status': 404};
+
+		}
 
 		await page.type('#patient-search', req.patient_id);
 		await page.waitForTimeout(1000);
@@ -112,15 +133,34 @@ export class OpenmrsController {
 			state: string;
 			country: string;
 			postal_code: string;
-			phone_no: string;
-			relationship_type: string
+			phone_no: string
 		},
 	): Promise<any> {
-		process.on('unhandledRejection', (reason, p) => {
+		const browserObj = await this.sessionRepository.findById(request.guid);
+		process.on('unhandledRejection', async (reason, p) => {
+			const errInfo = {
+				appname: 'openmrs',
+				webhook_url: browserObj.webhook_url,
+				err: {
+					message: `Unhandled Rejection at: Promise, ${p}, reason:, ${reason}`,
+					'status': 400
+				}
+			};
+			await this.webhookService.logError(errInfo);
 			console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 		});
 		this.runCreateAsync(request);
-		return {message: 'Patient will be created!', 'status': 200};;
+
+		const info = {
+			appname: 'openmrs',
+			webhook_url: browserObj.webhook_url,
+			info: {
+				message: 'Patient will be created!',
+				'status': 400
+			}
+		};
+		await this.webhookService.info(info);
+		return {message: 'Patient will be created!', 'status': 200};
 	}
 
 	/**
@@ -137,6 +177,15 @@ export class OpenmrsController {
 		await page.goto(config.openmrs.base_url, {waitUntil: 'load'});
 		if (await page.$('#username') !== null) {
 			browser.disconnect();
+			const errInfo = {
+				appname: 'openmrs',
+				webhook_url: browserObj.webhook_url,
+				err: {
+					message: 'Invalid session',
+					'status': 400
+				}
+			};
+			await this.webhookService.logError(errInfo);
 			return {message: 'Invalid session', 'status': 400};
 		}
 		await page.waitForTimeout(1000);
@@ -170,7 +219,7 @@ export class OpenmrsController {
 		inputElement = await page.waitForXPath("//input[@name='phoneNumber']");
 		await inputElement?.type(req.phone_no)
 		await page.click('#next-button');
-		await page.select('select#relationship_type', req.relationship_type)
+		// await page.select('select#relationship_type', req.relationship_type)
 		await page.click('#next-button');
 		await page.click('#submit');
 

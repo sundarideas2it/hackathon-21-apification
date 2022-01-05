@@ -41,7 +41,34 @@ const config = {
       functions: {
         findPatient: ['appname', 'webhook_url', 'patient_records']
       },
+    },
+    {
+      template: {
+        method: 'POST',
+        url: '{webhook_url}',
+        body: {
+          application: '{appname}',
+          Error: '{err}'
+        },
+      },
+      functions: {
+        logError: ['appname', 'webhook_url', 'err']
+      },
+    },
+    {
+      template: {
+        method: 'POST',
+        url: '{webhook_url}',
+        body: {
+          application: '{appname}',
+          Info: '{info}'
+        },
+      },
+      functions: {
+        info: ['appname', 'webhook_url', 'info']
+      },
     }
+
   ],
 };
 

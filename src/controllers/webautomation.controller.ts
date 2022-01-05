@@ -1,17 +1,22 @@
 // Uncomment these imports to begin using these cool features!
 // import {inject} from '@loopback/core';
+import {service} from '@loopback/core';
 import {
 	repository
 } from '@loopback/repository';
 import {post, requestBody, response} from '@loopback/rest';
 import puppeteer from 'puppeteer';
 import {SessionRepository} from '../repositories';
+import {
+	WebhookService
+} from '../services';
 import config from './../config.json';
 import {ConcurrentRequestBody, CreateSessionResObj, CredentialsRequestBody} from './specs/webautomation-controller.specs';
 export class WebautomationController {
 	constructor(
 		@repository(SessionRepository)
 		public sessionRepository: SessionRepository,
+		@service() public webhookService: WebhookService
 	) { }
 
 	/**
@@ -67,10 +72,29 @@ export class WebautomationController {
 			guid: string;
 		},
 	): Promise<any> {
-		process.on('unhandledRejection', (reason, p) => {
+		const browserObj = await this.sessionRepository.findById(credential.guid);
+		process.on('unhandledRejection', async (reason, p) => {
+			const errInfo = {
+				appname: 'openmrs',
+				webhook_url: browserObj.webhook_url,
+				err: {
+					message: `Unhandled Rejection at: Promise, ${p}, reason:, ${reason}`,
+					'status': 400
+				}
+			};
+			await this.webhookService.logError(errInfo);
 			console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 		});
 		this.close(credential);
+		const info = {
+			appname: 'openmrs',
+			webhook_url: browserObj.webhook_url,
+			info: {
+				message: 'Session will be destroyed!',
+				'status': 200
+			}
+		};
+		await this.webhookService.info(info);
 		return {message: 'Session will be destroyed!', 'status': 200};
 	}
 
@@ -89,13 +113,31 @@ export class WebautomationController {
 		await page.goto(config.openmrs.base_url, {waitUntil: 'load'});
 		if (await page.$('#username') !== null) {
 			browser.disconnect();
+			const errInfo = {
+				appname: 'openmrs',
+				webhook_url: browserObj.webhook_url,
+				err: {
+					message: 'Invalid session',
+					'status': 400
+				}
+			};
+			await this.webhookService.logError(errInfo);
 			return {message: 'Invalid session.', 'status': 400};
 		}
-		if (await page.$('button[class="navbar-toggler"]') !== null) {
-			await page.click('button[class="navbar-toggler"]');
-		}
+		// if (await page.$('button[class="navbar-toggler"]') !== null) {
+		// 	await page.click('button[class="navbar-toggler"]');
+		// }
 		if (await page.$('li[class="nav-item logout"]') === null) {
 			browser.disconnect();
+			const errInfo = {
+				appname: 'openmrs',
+				webhook_url: browserObj.webhook_url,
+				err: {
+					message: 'logout option not found.',
+					'status': 404
+				}
+			};
+			await this.webhookService.logError(errInfo);
 			return {message: 'logout option not found.', 'status': 404};
 		}
 		await page.click(config.openmrs.logout_btn);

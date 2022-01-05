@@ -59,7 +59,6 @@ const CreateRequestSchema: SchemaObject = {
     'country',
     'postal_code',
     'phone_no',
-    'relationship_type'
   ],
   properties: {
     guid: {
@@ -99,9 +98,6 @@ const CreateRequestSchema: SchemaObject = {
       type: 'string',
     },
     phone_no: {
-      type: 'string',
-    },
-    relationship_type: {
       type: 'string',
     },
   },
