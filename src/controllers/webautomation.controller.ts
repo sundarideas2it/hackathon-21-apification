@@ -60,7 +60,18 @@ export class WebautomationController {
 		await page.click('#loginButton');
 		await page.screenshot({path: 'Login.png'});
 		browser.disconnect();
-		return {guid: autoId, message: 'Session created successfully!', 'status': 200};
+		const trackid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		const info = {
+			trackid: trackid,
+			appname: 'openmrs',
+			webhook_url: credential.webhook_url,
+			info: {
+				message: 'Session created successfully!',
+				'status': 200
+			}
+		};
+		await this.webhookService.info(info);
+		return {guid: autoId, trackid, message: 'Session created successfully!', 'status': 200};
 	}
 
 	@post('/destroy-session')
@@ -72,9 +83,11 @@ export class WebautomationController {
 			guid: string;
 		},
 	): Promise<any> {
+		const trackid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		const browserObj = await this.sessionRepository.findById(credential.guid);
 		process.on('unhandledRejection', async (reason, p) => {
 			const errInfo = {
+				trackid,
 				appname: 'openmrs',
 				webhook_url: browserObj.webhook_url,
 				err: {
@@ -85,8 +98,9 @@ export class WebautomationController {
 			await this.webhookService.logError(errInfo);
 			console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 		});
-		this.close(credential);
+		this.close(credential, trackid);
 		const info = {
+			trackid,
 			appname: 'openmrs',
 			webhook_url: browserObj.webhook_url,
 			info: {
@@ -95,14 +109,14 @@ export class WebautomationController {
 			}
 		};
 		await this.webhookService.info(info);
-		return {message: 'Session will be destroyed!', 'status': 200};
+		return {trackid, message: 'Session will be destroyed!', 'status': 200};
 	}
 
 	/**
 	 * logout and close the browser application
 	 * @param req - request object
 	 */
-	async close(req: any): Promise<any> {
+	async close(req: any, trackid: string): Promise<any> {
 		const browserObj = await this.sessionRepository.findById(req.guid);
 		const browser = await puppeteer.connect({
 			browserWSEndpoint: browserObj.browser,
@@ -114,6 +128,7 @@ export class WebautomationController {
 		if (await page.$('#username') !== null) {
 			browser.disconnect();
 			const errInfo = {
+				trackid,
 				appname: 'openmrs',
 				webhook_url: browserObj.webhook_url,
 				err: {
@@ -122,7 +137,7 @@ export class WebautomationController {
 				}
 			};
 			await this.webhookService.logError(errInfo);
-			return {message: 'Invalid session.', 'status': 400};
+			return {trackid, message: 'Invalid session.', 'status': 400};
 		}
 		// if (await page.$('button[class="navbar-toggler"]') !== null) {
 		// 	await page.click('button[class="navbar-toggler"]');
@@ -130,6 +145,7 @@ export class WebautomationController {
 		if (await page.$('li[class="nav-item logout"]') === null) {
 			browser.disconnect();
 			const errInfo = {
+				trackid,
 				appname: 'openmrs',
 				webhook_url: browserObj.webhook_url,
 				err: {
@@ -138,7 +154,7 @@ export class WebautomationController {
 				}
 			};
 			await this.webhookService.logError(errInfo);
-			return {message: 'logout option not found.', 'status': 404};
+			return {trackid, message: 'logout option not found.', 'status': 404};
 		}
 		await page.click(config.openmrs.logout_btn);
 		await page.screenshot({path: 'logout.png'});

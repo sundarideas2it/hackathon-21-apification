@@ -142,6 +142,7 @@ export const CreateRequestBody = {
 };
 export interface CreateSessionResObj {
   guid: string
+  trackid: string
   message: string
   status: number
 };

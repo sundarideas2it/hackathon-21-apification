@@ -18,6 +18,7 @@ const config = {
         method: 'POST',
         url: '{webhook_url}',
         body: {
+          trackid: '{trackid}',
           application: '{appname}',
           patient_info: {
             id: '{patient_id}',
@@ -26,7 +27,7 @@ const config = {
         },
       },
       functions: {
-        createPatient: ['appname', 'webhook_url', 'patient_id', 'patient_name']
+        createPatient: ['trackid', 'appname', 'webhook_url', 'patient_id', 'patient_name']
       },
     },
     {
@@ -34,12 +35,13 @@ const config = {
         method: 'POST',
         url: '{webhook_url}',
         body: {
+          trackid: '{trackid}',
           application: '{appname}',
           patient_records: '{patient_records}'
         },
       },
       functions: {
-        findPatient: ['appname', 'webhook_url', 'patient_records']
+        findPatient: ['trackid', 'appname', 'webhook_url', 'patient_records']
       },
     },
     {
@@ -47,12 +49,13 @@ const config = {
         method: 'POST',
         url: '{webhook_url}',
         body: {
+          trackid: '{trackid}',
           application: '{appname}',
           Error: '{err}'
         },
       },
       functions: {
-        logError: ['appname', 'webhook_url', 'err']
+        logError: ['trackid', 'appname', 'webhook_url', 'err']
       },
     },
     {
@@ -60,12 +63,13 @@ const config = {
         method: 'POST',
         url: '{webhook_url}',
         body: {
+          trackid: '{trackid}',
           application: '{appname}',
           Info: '{info}'
         },
       },
       functions: {
-        info: ['appname', 'webhook_url', 'info']
+        info: ['trackid', 'appname', 'webhook_url', 'info']
       },
     }
 

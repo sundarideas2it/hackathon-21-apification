@@ -7,6 +7,7 @@ export interface Webhook {
   // mapped to REST/SOAP/gRPC operations as stated in the datasource
   // json file.
   createPatient(
+    trackid: string,
     appname: string,
     webhook_url: string,
     patient_id: string,
@@ -14,18 +15,21 @@ export interface Webhook {
   ): Promise<object>;
 
   findPatient(
+    trackid: string,
     appname: string,
     webhook_url: string,
     patient_records: object
   ): Promise<object>;
 
   logError(
+    trackid: string,
     appname: string,
     webhook_url: string,
     err: object
   ): Promise<object>;
 
   info(
+    trackid: string,
     appname: string,
     webhook_url: string,
     info: object
@@ -54,6 +58,7 @@ export class WebhookService {
   async createPatient(params: any): Promise<object> {
     try {
       const webPatient = await this.webhookservice.createPatient(
+        params.trackid,
         params.appname,
         params.webhook_url,
         params.patient_id,
@@ -68,6 +73,7 @@ export class WebhookService {
   async findPatient(params: any): Promise<object> {
     try {
       const webPatient = await this.webhookservice.findPatient(
+        params.trackid,
         params.appname,
         params.webhook_url,
         params.patient_details,
@@ -82,6 +88,7 @@ export class WebhookService {
   async logError(params: any): Promise<object> {
     try {
       const webPatient = await this.webhookservice.logError(
+        params.trackid,
         params.appname,
         params.webhook_url,
         params.err,
@@ -96,6 +103,7 @@ export class WebhookService {
   async info(params: any): Promise<object> {
     try {
       const webPatient = await this.webhookservice.info(
+        params.trackid,
         params.appname,
         params.webhook_url,
         params.info,

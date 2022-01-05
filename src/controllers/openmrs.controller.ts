@@ -34,15 +34,27 @@ export class OpenmrsController {
 		process.on('unhandledRejection', (reason, p) => {
 			console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 		});
-		this.runFindAsync(request);
-		return {guid: request.guid, message: 'Web automation in parallel!', 'status': 200};;
+		const trackid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		this.runFindAsync(request, trackid);
+		const browserObj = await this.sessionRepository.findById(request.guid);
+		const info = {
+			trackid: trackid,
+			appname: 'openmrs',
+			webhook_url: browserObj.webhook_url,
+			info: {
+				message: 'Patient information will be fetched!',
+				'status': 200
+			}
+		};
+		await this.webhookService.info(info);
+		return {trackid, guid: request.guid, message: 'Patient information will be fetched!', 'status': 200};;
 	}
 
 	/**
 	 * Find a patient in asyncronous mode
 	 * @param req - request object
 	 */
-	async runFindAsync(req: any): Promise<any> {
+	async runFindAsync(req: any, trackid: string): Promise<any> {
 		const browserObj = await this.sessionRepository.findById(req.guid);
 		const browser = await puppeteer.connect({
 			browserWSEndpoint: browserObj.browser,
@@ -71,6 +83,7 @@ export class OpenmrsController {
 		if (await page.$('#patient-search') === null) {
 			browser.disconnect();
 			const errInfo = {
+				trackid,
 				appname: 'openmrs',
 				webhook_url: browserObj.webhook_url,
 				err: {
@@ -79,7 +92,7 @@ export class OpenmrsController {
 				}
 			};
 			await this.webhookService.logError(errInfo);
-			return {message: 'Search field not found', 'status': 404};
+			return {trackid, message: 'Search field not found', 'status': 404};
 
 		}
 
@@ -101,7 +114,10 @@ export class OpenmrsController {
 			id: req.patient_id,
 			diagnoses
 		}
-		const patientInfo = {appname: 'openmrs', patient_details: patient_dtls, webhook_url: browserObj.webhook_url};
+		const patientInfo = {
+			trackid: trackid,
+			appname: 'openmrs', patient_details: patient_dtls, webhook_url: browserObj.webhook_url
+		};
 		await this.webhookService.findPatient(patientInfo);
 		if (await page.$('#patient-search-results-table_info') !== null) {
 			await page.waitForTimeout(1000);
@@ -137,8 +153,10 @@ export class OpenmrsController {
 		},
 	): Promise<any> {
 		const browserObj = await this.sessionRepository.findById(request.guid);
+		const trackid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		process.on('unhandledRejection', async (reason, p) => {
 			const errInfo = {
+				trackid,
 				appname: 'openmrs',
 				webhook_url: browserObj.webhook_url,
 				err: {
@@ -149,25 +167,27 @@ export class OpenmrsController {
 			await this.webhookService.logError(errInfo);
 			console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 		});
-		this.runCreateAsync(request);
+
+		this.runCreateAsync(request, trackid);
 
 		const info = {
+			trackid: trackid,
 			appname: 'openmrs',
 			webhook_url: browserObj.webhook_url,
 			info: {
 				message: 'Patient will be created!',
-				'status': 400
+				'status': 200
 			}
 		};
 		await this.webhookService.info(info);
-		return {message: 'Patient will be created!', 'status': 200};
+		return {trackid, message: 'Patient will be created!', 'status': 200};
 	}
 
 	/**
 	 * Create a patient in asyncronous mode
 	 * @param req - request object
 	 */
-	async runCreateAsync(req: any): Promise<any> {
+	async runCreateAsync(req: any, trackid: string): Promise<any> {
 		const browserObj = await this.sessionRepository.findById(req.guid);
 		const browser = await puppeteer.connect({
 			browserWSEndpoint: browserObj.browser,
@@ -178,6 +198,7 @@ export class OpenmrsController {
 		if (await page.$('#username') !== null) {
 			browser.disconnect();
 			const errInfo = {
+				trackid: trackid,
 				appname: 'openmrs',
 				webhook_url: browserObj.webhook_url,
 				err: {
@@ -226,6 +247,7 @@ export class OpenmrsController {
 		const patientIdElem = await page.waitForXPath("//*[@id='content']/div[6]/div[2]/div/span");
 		const patientId = await page.evaluate(name => name.innerText, patientIdElem);
 		const patientInfo = {
+			trackid: trackid,
 			appname: 'openmrs',
 			patient_id: patientId,
 			patient_name: `${req.name} ${req.family_name}`,
