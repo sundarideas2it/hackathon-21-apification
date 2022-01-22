@@ -16,7 +16,11 @@ To only install resolved dependencies in `package-lock.json`:
 
 ```sh
 npm ci
+
 ```
+
+```sh
+npm ci
 
 ## Run the application
 
